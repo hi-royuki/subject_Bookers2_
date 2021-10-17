@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
- 
+  
 # ログイン後のぱす 
  def after_sign_in_path_for(resource)
     user_path(resource)
@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
   end
     
     before_action :configure_permitted_parameters, if: :devise_controller?
+    
+   
 
   protected
 

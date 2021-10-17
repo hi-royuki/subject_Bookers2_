@@ -1,32 +1,32 @@
 class BooksController < ApplicationController
-    # 投稿画面
+  # 投稿画面
+  before_action :authenticate_user!
+  
+  before_action :correct_user, only: [:edit, :update]
+    
   def new
   end
 
   def create
-    @book = Book.new(book_params) # 何を新しく保存するのかを指定
-    @book.user_id = current_user.id # 誰が投稿したのかを指定
-    # セーブ直前の行に記述する→保存の前にユーザーIDと関連しているという記述をすることで連動する
+    @book = Book.new(book_params) 
+    @book.user_id = current_user.id 
     @book.save
 
-    if @book.update(book_params) # もし保存ができたら
+    if @book.update(book_params) 
       flash[:success] = "You have created book successfully."
-      # サクセスメッセージを表示
-      redirect_to book_path(@book.id) # 投稿詳細画面へ遷移
-
-    else # でなければ
+      redirect_to book_path(@book.id)
+    else 
       @books = Book.all
       @user = current_user
-      render action: :index # indexへ遷移
-      # indexのアクションをスルーしてindex.htnl.erbへ
-      # renderはredirect_toと異なりアクションを経由せずそのままビューを出力するので、ビューで使う変数はrenderの前にそのアクションで定義しないといけない
+      render action: :index
+     
     end
   end
 
   def index
     @user = current_user
-    # 現在ログインしているユーザーの情報を取得できるメソッド
-
+    
+    
     @book = Book.new
     @books = Book.all
   end
@@ -36,7 +36,7 @@ class BooksController < ApplicationController
     @books = Book.all
 
     @user = @book.user
-    # 本の投稿者が誰なのか
+    
     @booknew = Book.new
   end
 
@@ -45,27 +45,28 @@ class BooksController < ApplicationController
   end
 
   def update
-    @book = Book.find(params[:id]) # 何を更新存するのかを指定
-
-    if @book.update(book_params) # もし更新ができたら
+    @book = Book.find(params[:id]) 
+    # 更新できたらif~
+    if @book.update(book_params) 
       flash[:success] = "You have updated book successfully."
       # サクセスメッセージを表示
-      redirect_to book_path(@book.id) # 投稿詳細画面へ遷移
-    else # でなければ
-       render action: :edit # editへ遷移
+      redirect_to book_path(@book.id)
+    else 
+       render action: :edit 
     end
   end
 
   def destroy
     @book = Book.find(params[:id])
     @book.destroy
+    
     redirect_to books_path
-    # 一覧画面へ遷移させたい
-    # 一覧画面へ遷移させた後、文字の表示をさせたい
+   
+   
   end
 
   private
-   #  データベースからデータを取得
+  
   def book_params
     params.require(:book).permit(:title, :body)
   end

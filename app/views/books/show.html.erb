@@ -1,28 +1,40 @@
 <!--投稿詳細一覧ユーザのみ-->
+<% if flash[:success] %>
+  <p class=notice>
+    <%= flash[:success] %>
+  </p>
+<% end %>
+
+<div class="container">
+  <div class="row">
+        
+
 <div class="col-md-3">
     <h2>User info</h2>
-     
+      <%= attachment_image_tag @user, :profile_image, :fill, 100, 100, format: 'jpeg', fallback: "no_image.jpg" %> 
     <!--プロフィール画像-->
     <table>
         <tbody>
             <tr></tr>
             <tr>
                 <th>name</th>
-                <th></th> <!--<th>ここにユーザーネーム</th>-->
+                <th><%= @user.name %></th> <!--<th>ここにユーザーネーム</th>-->
             </tr>
             <tr>
                 <th>introduction</th>
-                <!--<th>ここにイントロダクション</th>-->
+                <th><%= @user.introduction %></th>
+                 <tr><% if @user.id == current_user.id %></tr>
+                 <% end %>
             </tr>
         </tbody>
     </table>
     <div class="row">
-        <!--ここにユーザ編集機能-->
+        <%= link_to " ", edit_user_path(@user), class: "btn btn-outline-secondary btn-block fas fa-user-cog" %><!--ここにユーザ編集機能-->
     </div>
     
     
     <h2 class="mt-3">New book</h2>
-    <%= form_with model:@book, local:true do |f| %>
+    <%= form_with model:Book.new, local:true do |f| %>
     <div class="form-group">
         <label for="book_title">Title</label>
         <%= f.text_field :title, autofocus: true, class:"form-control", id:"book_title"%>
@@ -36,14 +48,13 @@
     </div>
   <% end %>
   </div>
-  
   <div class="col-md-8 offset-md-1">
       <h2>Book detail</h2>
       <table class="table">
           <tbody>
               <tr>
-                  <td></td>
-                  <td><%= link_to @user.name, user_path(@user.id) %></td>
+                  <td><%= link_to attachment_image_tag(@user, :profile_image, :fill, 100, 100, format: 'jpeg', fallback: "no_image.jpg"),user_path(@user.id) %><br>
+                  <%= link_to @user.name, user_path(@user.id) %></td>
                   <td><%= link_to @book.title, book_path(@book.id) %></td>
                   <td><%= @book.body %></td>
                   <% if @user.id == current_user.id %>
@@ -54,3 +65,5 @@
           </tbody>
       </table>
   </div>
+</div>
+</div>

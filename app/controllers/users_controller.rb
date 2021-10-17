@@ -1,9 +1,8 @@
 class UsersController < ApplicationController
-   before_action :authenticate_user!
-  # ログイン済ユーザーのみにアクセスを許可する
-  # コントローラーの先頭に記載することで、そこで行われる処理はログインユーザーによってのみ実行可能となる
+  before_action :authenticate_user!
+
   before_action :correct_user, only: [:edit, :update]
-  # サインインしているユーザーを取得する
+  
 
   def index
     @user = current_user
@@ -21,7 +20,6 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @book = Book.new
     @books = @user.books
-    #ユーザー（自分）に関連している本の投稿が羅列されるように
   end
 
   def update
@@ -29,7 +27,6 @@ class UsersController < ApplicationController
 
     if @user.update(user_params)
       flash[:success] = "You have updated user successfully."
-      # サクセスメッセージを表示
       redirect_to user_path(@user.id)
     else
       render action: :edit
